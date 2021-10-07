@@ -13,9 +13,7 @@ source:
 build:
   number: 0
   noarch: python
-  entry_points:
-    - openml=openml.cli:main
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . -vv --no-deps
 
 requirements:
   host:
@@ -27,7 +25,7 @@ requirements:
     - numpy >=1.6.2
     - pandas >=1.0.0
     - pyarrow
-    - python >=3.6
+    - python
     - python-dateutil
     - requests
     - scikit-learn >=0.18
