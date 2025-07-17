@@ -7,32 +7,36 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/openml-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: cefb4792ca12ee87ab3acc5e5afb4e9d205c398621e2424f2f5de1564cfee849
 
 build:
-  number: 0
+  number: 1
   noarch: python
-  script: {{ PYTHON }} -m pip install . -vv --no-deps
+  entry_points:
+    - openml=openml.cli:main
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<36]
 
 requirements:
   host:
     - pip
+    - python >=3.6
     - setuptools
     - wheel
-    - python >=3.6
   run:
+    - python >=3.6
     - liac-arff >=2.4.0
-    - minio
-    - numpy >=1.6.2
-    - pandas >=1.0.0
-    - pyarrow
-    - python
-    - python-dateutil
+    - xmltodict
     - requests
     - scikit-learn >=0.18
+    - python-dateutil
+    - pandas >=1.0.0
     - scipy >=0.13.3
-    - xmltodict
+    - minio
+    # AttributeError: `np.sctypes` was removed in the NumPy 2.0 release. Access dtypes explicitly instead.
+    - numpy >=1.6.2,<2
+    - pyarrow
 
 test:
   imports:
@@ -41,18 +45,21 @@ test:
   commands:
     - pip check
     - openml --help
-    # disabled because tests not packaged with source
-    #- cd tests && pytest
   requires:
     - pip
 
 about:
-  home: https://openml.org/
+  home: https://openml.org
   summary: Python API for OpenML
   license: BSD-3-Clause
+  license_family: BSD
   license_file: LICENSE
+  description: |
+    OpenML-Python provides an easy-to-use and straightforward Python interface for OpenML,
+    an online platform for open science collaboration in machine learning.
+    It can download or upload data from OpenML, such as datasets and machine learning experiment results.
   dev_url: https://github.com/openml/openml-python
-  doc_url: https://openml.github.io/openml-python/
+  doc_url: https://openml.github.io/openml-python
 
 extra:
   recipe-maintainers:
